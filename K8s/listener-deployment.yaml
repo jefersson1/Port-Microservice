@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: listener
+  labels:
+    app: listener
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: listener
+  template:
+    metadata:
+      labels:
+        app: listener
+    spec:
+      containers:
+        - name: listener
+          image: jefersson12/microservice-listener:latest # Cambiar por tu imagen
+          ports:
+            - containerPort: 8083
+          env:
+            - name: RABBITMQ_CONNECTION_STRING
+              value: "amqp://guest:guest@rabbitmq:5672"

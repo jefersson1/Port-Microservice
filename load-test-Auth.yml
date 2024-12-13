@@ -1,0 +1,20 @@
+config:
+  target: "http://localhost:8080"  # URL de tu servicio en Docker
+  phases:
+    - duration: 60  # Duración de la prueba en segundos
+      arrivalRate: 10  # Número de usuarios por segundo que serán generados
+      name: "Ramp Up"
+    - duration: 300  # 5 minutos de pruebas a carga constante
+      arrivalRate: 20  # Mantener 20 usuarios por segundo
+      name: "Sustained Load"
+    - duration: 60  # Duración de la prueba de pico
+      arrivalRate: 50  # Aumenta la cantidad de usuarios a 50 por segundo
+      name: "Peak Load"
+
+scenarios:
+  - flow:
+      - post:
+          url: "/authentication"
+          json:
+            email: "admin@example.com"
+            password: "password123"

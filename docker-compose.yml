@@ -1,0 +1,73 @@
+version: '3'
+services:
+  broker:
+    build:
+      context: broker
+      dockerfile: broker.Dockerfile
+    ports:
+      - "8080:80"
+  authentication:
+    build:
+      context: authentication
+      dockerfile: authentication.Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_CONNECTION_STRING: "host=postgres port=5432 user=postgres password=password dbname=users_db sslmode=disable"
+  logger:
+    build:
+      context: logger
+      dockerfile: logger.Dockerfile
+    depends_on:
+      - mongo
+    environment:
+      MONGO_CONNECTION_STRING: "mongodb://mongo:password@mongo:27017/?ssl=false"
+  listener:
+    build:
+      context: listener
+      dockerfile: listener.Dockerfile
+    environment:
+      RABBITMQ_CONNECTION_STRING: "amqp://guest:guest@rabbitmq:5672"
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: users_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  mongo:
+    image: 'mongo'
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: logs_db
+    volumes:
+      - mongo_data:/data/db
+  rabbitmq:
+    image: 'rabbitmq:3-management-alpine'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+  mi-aplicacion-vite:
+    build:
+     context: ./client  
+     dockerfile: Dockerfile  
+    ports:
+     - "5173:5173"  
+    depends_on:
+     - broker 
+
+volumes:
+  postgres_data:
+  mongo_data:
+  rabbitmq_data:

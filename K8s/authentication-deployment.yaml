@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication
+  labels:
+    app: authentication
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authentication
+  template:
+    metadata:
+      labels:
+        app: authentication
+    spec:
+      containers:
+        - name: authentication
+          image: jefersson12/microservice-authentication:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: POSTGRES_CONNECTION_STRING
+              value: "host=postgres port=5432 user=postgres password=password dbname=users_db sslmode=disable"

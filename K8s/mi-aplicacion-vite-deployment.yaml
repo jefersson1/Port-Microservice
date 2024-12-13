@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-aplicacion-vite
+  labels:
+    app: mi-aplicacion-vite
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mi-aplicacion-vite
+  template:
+    metadata:
+      labels:
+        app: mi-aplicacion-vite
+    spec:
+      containers:
+        - name: mi-aplicacion-vite
+          image: jefersson12/microservice-mi-aplicacion-vite:latest 
+          ports:
+            - containerPort: 5173

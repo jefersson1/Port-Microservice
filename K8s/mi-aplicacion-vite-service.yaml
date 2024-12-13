@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-aplicacion-vite
+spec:
+  selector:
+    app: mi-aplicacion-vite
+  ports:
+    - protocol: TCP
+      port: 5173
+      targetPort: 5173
+      nodePort: 31154
+  type: NodePort # Cambiar a NodePort si no estás en la nube
